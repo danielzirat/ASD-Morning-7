@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -6,19 +6,15 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-
-const buildTableRow = (recipe, index) => {
-    return <TableRow key={index}>
-        <TableCell>{recipe.name}</TableCell>
-        <TableCell>{recipe.preparationTime}</TableCell>
-        <TableCell>{recipe.cookingTime}</TableCell>
-        <TableCell>{recipe.type}</TableCell>
-    </TableRow>
-};
+import Typography from "@material-ui/core/Typography";
+import RecipesListRow from "./RecipesListRow";
 
 export default function RecipesList(props) {
-    return (
-        <TableContainer component={Paper}>
+
+    return props.recipes.length === 0 ?
+        (<Typography variant="body1" component="h6">There are no recipes to show</Typography>)
+        :
+        (<TableContainer component={Paper}>
             <Table>
                 <TableHead>
                     <TableRow>
@@ -26,13 +22,22 @@ export default function RecipesList(props) {
                         <TableCell>Preparation time (min)</TableCell>
                         <TableCell>Cooking time (min)</TableCell>
                         <TableCell>Type</TableCell>
+                        <TableCell>Settings</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {props.recipes.map((recipe, index) => buildTableRow(recipe, index))}
+                    {props.recipes.map((recipe, index) => <RecipesListRow
+                            key={index}
+                            index={index}
+                            recipe={recipe}
+                            editRecipeName={props.editRecipeName}
+                            showAddRecipeDialog={props.showAddRecipeDialog}
+                            setRecipeToEdit={props.setRecipeToEdit}
+                            deleteRecipe={props.deleteRecipe}
+                        />
+                    )}
                 </TableBody>
             </Table>
-        </TableContainer>
-    );
+        </TableContainer>);
 
 }
